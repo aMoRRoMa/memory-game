@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import './App.css';
 
 
-const CELLS = new Array(25).fill(0).reduce(
+const CELLS_COUNT = 16;
+const CELLS = new Array(CELLS_COUNT).fill(0).reduce(
   (memo, _, index) => ({
     ...memo,
     [index]: {
@@ -18,13 +19,13 @@ const Cell = ({ id, type, isOpen, toggleHandler, block }) => (
   <div
     className={`Cell ${type} ${isOpen ? 'open' : ''}`}
     onClick={() => !block && toggleHandler(id)}
-  >
-    {isOpen && type}
-  </div>
+  />
 );
 
 const Game = () => {
-  const [{ cells, openedCell, blockCells }, setState] = useState({ cells: CELLS, openedCell: null, blockCells: {} });
+  const initialState = { cells: CELLS, openedCell: null, blockCells: {} };
+  const [{ cells, openedCell, blockCells }, setState] = useState(initialState);
+  const startNewGame = () => setState(initialState);
   
   const toggleCells = (ids, cells, withBlock = false) => ({
     ...cells,
@@ -72,17 +73,26 @@ const Game = () => {
     });
   };
   
+  const isFinish = blockCells => Object.keys(blockCells).length === CELLS_COUNT;
+  const isDirty = blockCells => Object.keys(blockCells).length > 0;
+  
   return (
-    <div className="Game">
-      {Object.values(cells).map(cell => (
-        <Cell
-          key={cell.id}
-          {...cell}
-          block={!!blockCells[cell.id]}
-          toggleHandler={(id) => checkCell(id, openedCell, blockCells, cells)}
-        />)
-      )}
-    </div>
+    <Fragment>
+      <div className="Game">
+        {Object.values(cells).map(cell => (
+          <Cell
+            key={cell.id}
+            {...cell}
+            block={!!blockCells[cell.id]}
+            toggleHandler={(id) => checkCell(id, openedCell, blockCells, cells)}
+          />)
+        )}
+      </div>
+      <div className="Actions">
+        <button onClick={startNewGame} disabled={!isFinish(blockCells)}>New game</button>
+        <button onClick={startNewGame} disabled={!isDirty(blockCells) || isFinish(blockCells)}>Clear</button>
+      </div>
+    </Fragment>
   );
 };
 

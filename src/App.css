@@ -3,13 +3,13 @@
 }
 
 .Game {
-  width: 504px;
-  height: 504px;
+  width: 403px;
+  height: 403px;
   border: #000 solid 1px;
   background-color: #000;
   display: grid;
-  grid-template-columns: 100px 100px 100px 100px 100px;
-  grid-template-rows: 100px 100px 100px 100px 100px;
+  grid-template-columns: 100px 100px 100px 100px;
+  grid-template-rows: 100px 100px 100px 100px;
   grid-gap: 1px;
 }
 
@@ -27,4 +27,16 @@
 }
 .Cell.open.black {
   background-color: #000;
+}
+
+.Actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+.Actions button {
+  display: block;
+  width: 180px;
+  height: 50px;
+  margin: 1px;
 }
